@@ -1,0 +1,18 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm ci --ignore-scripts
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm audit --audit-level=high
+      - name: Quick start (sample suite, no browser needed)
+        run: |
+          npx tsx bin/web-recheck.ts validate examples/beta-portal/site-profile.yaml --kind site_profile
+          npx tsx bin/web-recheck.ts registry check --registry examples/beta-portal/cases.yaml

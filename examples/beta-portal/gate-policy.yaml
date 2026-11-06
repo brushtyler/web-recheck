@@ -1,0 +1,3 @@
+schema_version: "1"
+required_cases: [BETA-HOME-001]
+flaky_as: INCONCLUSIVE

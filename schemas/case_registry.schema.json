@@ -1,0 +1,525 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1"
+    },
+    "site_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]{1,40}$"
+    },
+    "cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "DISCOVERED",
+              "INFERRED",
+              "APPROVED",
+              "EXECUTABLE",
+              "NEEDS_SPEC"
+            ]
+          },
+          "case_revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "content_hash": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "mutating": {
+            "default": false,
+            "type": "boolean"
+          },
+          "parameters": {
+            "default": {},
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ]
+            }
+          },
+          "steps": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "navigate"
+                    },
+                    "path": {
+                      "type": "string",
+                      "maxLength": 500,
+                      "pattern": "^\\/(?!\\/)[^\\s]*$"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "path"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "click"
+                    },
+                    "target": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "maxLength": 60
+                        },
+                        "test_id": {
+                          "type": "string",
+                          "maxLength": 100
+                        },
+                        "text": {
+                          "type": "string",
+                          "maxLength": 200
+                        },
+                        "name": {
+                          "type": "string",
+                          "maxLength": 200
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "target"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "fill"
+                    },
+                    "target": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "maxLength": 60
+                        },
+                        "test_id": {
+                          "type": "string",
+                          "maxLength": 100
+                        },
+                        "text": {
+                          "type": "string",
+                          "maxLength": 200
+                        },
+                        "name": {
+                          "type": "string",
+                          "maxLength": 200
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "value": {
+                      "type": "string",
+                      "maxLength": 500
+                    },
+                    "value_ref": {
+                      "type": "string",
+                      "pattern": "^env:[A-Z][A-Z0-9_]*$"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "target"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "select"
+                    },
+                    "target": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "maxLength": 60
+                        },
+                        "test_id": {
+                          "type": "string",
+                          "maxLength": 100
+                        },
+                        "text": {
+                          "type": "string",
+                          "maxLength": 200
+                        },
+                        "name": {
+                          "type": "string",
+                          "maxLength": 200
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "option": {
+                      "type": "string",
+                      "maxLength": 500
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "target",
+                    "option"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "press"
+                    },
+                    "key": {
+                      "type": "string",
+                      "maxLength": 30
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "key"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "wait_for"
+                    },
+                    "text": {
+                      "type": "string",
+                      "maxLength": 500
+                    },
+                    "target": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "maxLength": 60
+                        },
+                        "test_id": {
+                          "type": "string",
+                          "maxLength": 100
+                        },
+                        "text": {
+                          "type": "string",
+                          "maxLength": 200
+                        },
+                        "name": {
+                          "type": "string",
+                          "maxLength": 200
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "timeout_ms": {
+                      "default": 5000,
+                      "type": "integer",
+                      "minimum": 100,
+                      "maximum": 120000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "timeout_ms"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "fixture"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_]{0,30}$"
+                    },
+                    "as": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_]{0,30}$"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "kind",
+                    "as"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "oracles": {
+            "minItems": 1,
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "text_visible"
+                    },
+                    "text": {
+                      "type": "string",
+                      "maxLength": 500
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "text"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "element_present"
+                    },
+                    "target": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "maxLength": 60
+                        },
+                        "test_id": {
+                          "type": "string",
+                          "maxLength": 100
+                        },
+                        "text": {
+                          "type": "string",
+                          "maxLength": 200
+                        },
+                        "name": {
+                          "type": "string",
+                          "maxLength": 200
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "target"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "url_matches"
+                    },
+                    "path": {
+                      "type": "string",
+                      "maxLength": 500,
+                      "pattern": "^\\/(?!\\/)[^\\s]*$"
+                    },
+                    "contains": {
+                      "type": "string",
+                      "maxLength": 500
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "http_status"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "minimum": 100,
+                      "maximum": 599
+                    },
+                    "url_contains": {
+                      "type": "string",
+                      "maxLength": 500
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "status"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "no_console_errors"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "count_equals"
+                    },
+                    "target": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "maxLength": 60
+                        },
+                        "test_id": {
+                          "type": "string",
+                          "maxLength": 100
+                        },
+                        "text": {
+                          "type": "string",
+                          "maxLength": 200
+                        },
+                        "name": {
+                          "type": "string",
+                          "maxLength": 200
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "count": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "target",
+                    "count"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "approval": {
+            "type": "object",
+            "properties": {
+              "approved_by": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100
+              },
+              "approved_at": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+              },
+              "approved_revision": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "approved_content_hash": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              }
+            },
+            "required": [
+              "approved_by",
+              "approved_at",
+              "approved_revision",
+              "approved_content_hash"
+            ],
+            "additionalProperties": false
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "inventory_id": {
+                "type": "string",
+                "maxLength": 100
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "case_id",
+          "title",
+          "state",
+          "case_revision",
+          "content_hash",
+          "mutating",
+          "parameters",
+          "steps",
+          "oracles"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "site_id",
+    "cases"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,60 @@
+schema_version: "1"
+site_id: gestionale
+cases:
+  - mutating: false
+    parameters: {}
+    case_id: GST-LOGIN-001
+    title: Login page is reachable
+    source:
+      inventory_id: AUTH-001
+    steps:
+      - type: navigate
+        path: /login
+    oracles:
+      - type: text_visible
+        text: Accedi
+      - type: http_status
+        status: 200
+    state: EXECUTABLE
+    case_revision: 1
+    content_hash: sha256:f9e162b8f40c4553b92e50f8738d385c87322603c259f9e1fa8561f76ae2941b
+    approval:
+      approved_by: seed-bootstrap
+      approved_at: 2026-11-06T00:00:00.000Z
+      approved_revision: 1
+      approved_content_hash: sha256:f9e162b8f40c4553b92e50f8738d385c87322603c259f9e1fa8561f76ae2941b
+  - mutating: false
+    parameters: {}
+    case_id: GST-DASH-001
+    title: Dashboard lists rows
+    source:
+      inventory_id: DASH-001
+    steps:
+      - type: navigate
+        path: /dashboard
+    oracles:
+      - type: count_equals
+        target:
+          test_id: row
+        count: 2
+    state: EXECUTABLE
+    case_revision: 1
+    content_hash: sha256:aca258017db8cf815aab078d26fc755a5f86a6d12dd35098bffc7bc9eb94bb52
+    approval:
+      approved_by: seed-bootstrap
+      approved_at: 2026-11-06T00:00:00.000Z
+      approved_revision: 1
+      approved_content_hash: sha256:aca258017db8cf815aab078d26fc755a5f86a6d12dd35098bffc7bc9eb94bb52
+  - mutating: false
+    parameters: {}
+    case_id: GST-DISC-001
+    title: Discovered, not yet approved
+    state: DISCOVERED
+    steps:
+      - type: navigate
+        path: /ok
+    oracles:
+      - type: text_visible
+        text: Welcome
+    case_revision: 1
+    content_hash: sha256:6595a9447921d488baccff6530e9e37a003cf437f7e9b860fef3cba3fee0346e
