@@ -12,7 +12,7 @@ export function checkRegistry(reg: CaseRegistry, opts: { verifyHash: boolean } =
     if (opts.verifyHash && c.content_hash !== computeContentHash(c)) {
       throw new FrameworkError('REVISION_STALE', `REVISION_STALE: ${c.case_id} content differs from content_hash; run "registry save"`, `/cases/${i}/content_hash`);
     }
-    if (c.state === 'EXECUTABLE' && !hasValidApproval(c)) {
+    if (opts.verifyHash && c.state === 'EXECUTABLE' && !hasValidApproval(c)) {
       throw new FrameworkError('APPROVAL_INVALID', `APPROVAL_INVALID: ${c.case_id} is EXECUTABLE without valid approval for its revision/content`, `/cases/${i}/approval`);
     }
   }

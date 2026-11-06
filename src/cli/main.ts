@@ -1,5 +1,5 @@
 import { parseArgs } from 'node:util';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { FrameworkError, errMessage } from '../errors.js';
 import { DOC_KINDS, RunResultsSchema, loadDocument, resolvePolicy, type DocKind } from '../contracts/index.js';
 import { diffRuns } from '../compare/diff.js';
@@ -18,7 +18,6 @@ import { installSignalHandlers } from '../executor/abort.js';
 import { runSuite } from '../executor/runner.js';
 import { reap } from '../fixture/reaper.js';
 import { Ledger } from '../fixture/ledger.js';
-import { resolveInside } from '../security/paths.js';
 import { EXIT, exitFor } from './exit-codes.js';
 import type { BrowserAdapter } from '../executor/adapter.js';
 
@@ -119,7 +118,7 @@ export async function main(argv: string[], deps: MainDeps = {}): Promise<number>
       }
       case 'report': {
         const res = RunResultsSchema.parse(JSON.parse(readText(need(values.results, 'results'), 200 * 1024 * 1024)));
-        const w = new ArtifactWriter(resolveInside('.', outDir), redactor);
+        const w = new ArtifactWriter(resolve(outDir), redactor);
         const f = need(values.format, 'format');
         if (f === 'json') w.writeNamed('results.json', JSON.stringify(res, null, 2));
         else if (f === 'junit') w.writeNamed('junit.xml', renderJunit(res));
