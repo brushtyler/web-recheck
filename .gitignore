@@ -1,1 +1,5 @@
 /gestionale/
+node_modules/
+dist/
+artifacts/
+coverage/

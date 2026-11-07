@@ -1,0 +1,622 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1"
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "site_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]{1,40}$"
+    },
+    "tool_version": {
+      "type": "string"
+    },
+    "comparison_config_id": {
+      "type": "string"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+    },
+    "finished_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+    },
+    "plan": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+          },
+          "case_revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "parameter_set_id": {
+            "type": "string"
+          },
+          "content_hash": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "DISCOVERED",
+              "INFERRED",
+              "APPROVED",
+              "EXECUTABLE",
+              "NEEDS_SPEC"
+            ]
+          },
+          "blocking_eligible": {
+            "type": "boolean"
+          },
+          "approved_by": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "case_id",
+          "case_revision",
+          "parameter_set_id",
+          "content_hash",
+          "state",
+          "blocking_eligible"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "plan_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "faults": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "gate": {
+      "type": "object",
+      "properties": {
+        "decision": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "FAIL",
+            "INCONCLUSIVE"
+          ]
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "case_id": {
+                "type": "string"
+              },
+              "verdict": {
+                "type": "string",
+                "enum": [
+                  "NON_ESEGUITO",
+                  "PASS",
+                  "FAIL",
+                  "BLOCKED",
+                  "SKIPPED",
+                  "INCONCLUSIVE"
+                ]
+              },
+              "triage_class": {
+                "type": "string",
+                "enum": [
+                  "BUG_APP",
+                  "ENV_DB_TIMEOUT",
+                  "ENV_SERVICE",
+                  "AUTH_FIXTURE",
+                  "TEST_FLAKY",
+                  "SPEC_GAP",
+                  "DATA_DRIFT",
+                  "UNKNOWN"
+                ]
+              },
+              "effect": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "decision",
+        "reasons"
+      ],
+      "additionalProperties": false
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+          },
+          "case_revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "parameter_set_id": {
+            "type": "string"
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "NON_ESEGUITO",
+              "PASS",
+              "FAIL",
+              "BLOCKED",
+              "SKIPPED",
+              "INCONCLUSIVE"
+            ]
+          },
+          "reason_code": {
+            "type": "string"
+          },
+          "flaky": {
+            "type": "boolean"
+          },
+          "attempts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "attempt": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "verdict": {
+                  "type": "string",
+                  "enum": [
+                    "NON_ESEGUITO",
+                    "PASS",
+                    "FAIL",
+                    "BLOCKED",
+                    "SKIPPED",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "reason_code": {
+                  "type": "string"
+                },
+                "fixture_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "failures": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "source": {
+                        "type": "string",
+                        "enum": [
+                          "oracle",
+                          "invariant",
+                          "setup",
+                          "timeout",
+                          "action",
+                          "scope",
+                          "flaky",
+                          "abort"
+                        ]
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "phase": {
+                        "type": "string",
+                        "enum": [
+                          "setup",
+                          "steps",
+                          "oracles",
+                          "teardown"
+                        ]
+                      },
+                      "reason_code": {
+                        "type": "string"
+                      },
+                      "http_status": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "message": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "source",
+                      "name",
+                      "phase",
+                      "message"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "failed_assertions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "oracle": {
+                        "type": "string"
+                      },
+                      "expected": {},
+                      "actual": {}
+                    },
+                    "required": [
+                      "oracle",
+                      "expected",
+                      "actual"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "evidence": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string"
+                      },
+                      "file": {
+                        "type": "string"
+                      },
+                      "bytes": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "truncated": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "file",
+                      "bytes",
+                      "truncated"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "blocked_requests": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "notes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "duration_ms": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "attempt",
+                "verdict",
+                "fixture_ids",
+                "failures",
+                "failed_assertions",
+                "evidence",
+                "blocked_requests",
+                "notes",
+                "duration_ms"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "triage": {
+            "type": "object",
+            "properties": {
+              "class": {
+                "type": "string",
+                "enum": [
+                  "BUG_APP",
+                  "ENV_DB_TIMEOUT",
+                  "ENV_SERVICE",
+                  "AUTH_FIXTURE",
+                  "TEST_FLAKY",
+                  "SPEC_GAP",
+                  "DATA_DRIFT",
+                  "UNKNOWN"
+                ]
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "rule_id": {
+                "type": "string"
+              },
+              "rules_version": {
+                "type": "string"
+              },
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "source": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "class": {
+                      "type": "string",
+                      "enum": [
+                        "BUG_APP",
+                        "ENV_DB_TIMEOUT",
+                        "ENV_SERVICE",
+                        "AUTH_FIXTURE",
+                        "TEST_FLAKY",
+                        "SPEC_GAP",
+                        "DATA_DRIFT",
+                        "UNKNOWN"
+                      ]
+                    },
+                    "confidence": {
+                      "type": "number"
+                    },
+                    "rule_id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "source",
+                    "name",
+                    "class",
+                    "confidence",
+                    "rule_id"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "class",
+              "confidence",
+              "rule_id",
+              "rules_version",
+              "items"
+            ],
+            "additionalProperties": false
+          },
+          "failed_assertions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "oracle": {
+                  "type": "string"
+                },
+                "expected": {},
+                "actual": {}
+              },
+              "required": [
+                "oracle",
+                "expected",
+                "actual"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string"
+                },
+                "file": {
+                  "type": "string"
+                },
+                "bytes": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "truncated": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "kind",
+                "file",
+                "bytes",
+                "truncated"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "duration_ms": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "case_id",
+          "case_revision",
+          "parameter_set_id",
+          "verdict",
+          "flaky",
+          "attempts",
+          "failed_assertions",
+          "evidence",
+          "duration_ms"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "quarantined": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "resource_key": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "owner_case_id": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "resource_key",
+          "kind",
+          "name",
+          "owner_case_id",
+          "reason"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "verdicts": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "triage": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "flaky": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "quarantined": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "retries_used": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "blocked_requests": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "run_duration_ms": {
+          "type": "number"
+        },
+        "case_duration_ms": {
+          "type": "object",
+          "properties": {
+            "p50": {
+              "type": "number"
+            },
+            "p95": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "p50",
+            "p95"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "verdicts",
+        "triage",
+        "flaky",
+        "quarantined",
+        "retries_used",
+        "blocked_requests",
+        "run_duration_ms",
+        "case_duration_ms"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "run_id",
+    "site_id",
+    "tool_version",
+    "comparison_config_id",
+    "started_at",
+    "finished_at",
+    "plan",
+    "plan_digest",
+    "faults",
+    "results",
+    "quarantined",
+    "summary"
+  ],
+  "additionalProperties": false
+}

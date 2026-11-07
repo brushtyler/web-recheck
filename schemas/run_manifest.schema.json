@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1"
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "site_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]{1,40}$"
+    },
+    "tool_version": {
+      "type": "string"
+    },
+    "comparison_config_id": {
+      "type": "string"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+    },
+    "selection": {
+      "type": "object",
+      "properties": {
+        "case_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+          }
+        },
+        "states": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "DISCOVERED",
+              "INFERRED",
+              "APPROVED",
+              "EXECUTABLE",
+              "NEEDS_SPEC"
+            ]
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "shard_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]{1,10}$"
+    },
+    "workers": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 8
+    },
+    "retries": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5
+    },
+    "secrets": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^env:[A-Z][A-Z0-9_]*=\\*\\*\\*$"
+      }
+    },
+    "plan": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+          },
+          "case_revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "parameter_set_id": {
+            "type": "string"
+          },
+          "content_hash": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "DISCOVERED",
+              "INFERRED",
+              "APPROVED",
+              "EXECUTABLE",
+              "NEEDS_SPEC"
+            ]
+          },
+          "blocking_eligible": {
+            "type": "boolean"
+          },
+          "approved_by": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "case_id",
+          "case_revision",
+          "parameter_set_id",
+          "content_hash",
+          "state",
+          "blocking_eligible"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "plan_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "registry_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "policy_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "profile_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  },
+  "required": [
+    "schema_version",
+    "run_id",
+    "site_id",
+    "tool_version",
+    "comparison_config_id",
+    "started_at",
+    "selection",
+    "shard_id",
+    "workers",
+    "retries",
+    "secrets",
+    "plan",
+    "plan_digest",
+    "registry_digest",
+    "policy_digest",
+    "profile_digest"
+  ],
+  "additionalProperties": false
+}

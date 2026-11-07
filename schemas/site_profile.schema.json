@@ -1,0 +1,581 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1"
+    },
+    "site_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]{1,40}$"
+    },
+    "environment": {
+      "type": "string",
+      "enum": [
+        "beta",
+        "staging",
+        "production"
+      ]
+    },
+    "base_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "allowed_origins": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uri"
+      }
+    },
+    "auth": {
+      "default": {
+        "strategy": "none"
+      },
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "strategy": {
+              "type": "string",
+              "const": "none"
+            }
+          },
+          "required": [
+            "strategy"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "strategy": {
+              "type": "string",
+              "const": "form_login"
+            },
+            "login_path": {
+              "type": "string",
+              "pattern": "^\\/(?!\\/)"
+            },
+            "username_ref": {
+              "type": "string",
+              "pattern": "^env:[A-Z][A-Z0-9_]*$"
+            },
+            "password_ref": {
+              "type": "string",
+              "pattern": "^env:[A-Z][A-Z0-9_]*$"
+            },
+            "username_target": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "maxLength": 60
+                },
+                "test_id": {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                "text": {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                "name": {
+                  "type": "string",
+                  "maxLength": 200
+                }
+              },
+              "additionalProperties": false
+            },
+            "password_target": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "maxLength": 60
+                },
+                "test_id": {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                "text": {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                "name": {
+                  "type": "string",
+                  "maxLength": 200
+                }
+              },
+              "additionalProperties": false
+            },
+            "submit_target": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "maxLength": 60
+                },
+                "test_id": {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                "text": {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                "name": {
+                  "type": "string",
+                  "maxLength": 200
+                }
+              },
+              "additionalProperties": false
+            },
+            "success_text": {
+              "type": "string",
+              "maxLength": 200
+            }
+          },
+          "required": [
+            "strategy",
+            "login_path",
+            "username_ref",
+            "password_ref",
+            "username_target",
+            "password_target",
+            "submit_target"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "browser": {
+      "type": "object",
+      "properties": {
+        "engine": {
+          "default": "chromium",
+          "type": "string",
+          "enum": [
+            "chromium",
+            "http-lite"
+          ]
+        },
+        "viewport": {
+          "default": {
+            "w": 1280,
+            "h": 800
+          },
+          "type": "object",
+          "properties": {
+            "w": {
+              "type": "integer",
+              "minimum": 200,
+              "maximum": 4000
+            },
+            "h": {
+              "type": "integer",
+              "minimum": 200,
+              "maximum": 4000
+            }
+          },
+          "required": [
+            "w",
+            "h"
+          ],
+          "additionalProperties": false
+        },
+        "locale": {
+          "default": "en-US",
+          "type": "string",
+          "maxLength": 20
+        },
+        "timezone": {
+          "default": "UTC",
+          "type": "string",
+          "maxLength": 60
+        }
+      },
+      "required": [
+        "engine",
+        "viewport",
+        "locale",
+        "timezone"
+      ],
+      "additionalProperties": false
+    },
+    "invariants": {
+      "type": "object",
+      "properties": {
+        "no_console_errors": {
+          "default": true,
+          "type": "boolean"
+        },
+        "no_same_origin_5xx": {
+          "default": true,
+          "type": "boolean"
+        },
+        "console_allowlist": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 200
+          }
+        }
+      },
+      "required": [
+        "no_console_errors",
+        "no_same_origin_5xx",
+        "console_allowlist"
+      ],
+      "additionalProperties": false
+    },
+    "fixtures": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]{0,30}$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "create": {
+            "type": "object",
+            "properties": {
+              "method": {
+                "type": "string",
+                "enum": [
+                  "GET",
+                  "POST",
+                  "PUT",
+                  "PATCH",
+                  "DELETE"
+                ]
+              },
+              "path": {
+                "type": "string",
+                "maxLength": 300,
+                "pattern": "^\\/(?!\\/)"
+              },
+              "body": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": [
+                    "string",
+                    "number",
+                    "boolean"
+                  ]
+                }
+              },
+              "auth_ref": {
+                "type": "string",
+                "pattern": "^env:[A-Z][A-Z0-9_]*$"
+              }
+            },
+            "required": [
+              "method",
+              "path"
+            ],
+            "additionalProperties": false
+          },
+          "id_path": {
+            "default": "id",
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.]+$"
+          },
+          "teardown": {
+            "type": "object",
+            "properties": {
+              "method": {
+                "type": "string",
+                "enum": [
+                  "GET",
+                  "POST",
+                  "PUT",
+                  "PATCH",
+                  "DELETE"
+                ]
+              },
+              "path": {
+                "type": "string",
+                "maxLength": 300,
+                "pattern": "^\\/(?!\\/)"
+              },
+              "body": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": [
+                    "string",
+                    "number",
+                    "boolean"
+                  ]
+                }
+              },
+              "auth_ref": {
+                "type": "string",
+                "pattern": "^env:[A-Z][A-Z0-9_]*$"
+              }
+            },
+            "required": [
+              "method",
+              "path"
+            ],
+            "additionalProperties": false
+          },
+          "lookup": {
+            "type": "object",
+            "properties": {
+              "method": {
+                "type": "string",
+                "enum": [
+                  "GET",
+                  "POST",
+                  "PUT",
+                  "PATCH",
+                  "DELETE"
+                ]
+              },
+              "path": {
+                "type": "string",
+                "maxLength": 300,
+                "pattern": "^\\/(?!\\/)"
+              },
+              "body": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": [
+                    "string",
+                    "number",
+                    "boolean"
+                  ]
+                }
+              },
+              "auth_ref": {
+                "type": "string",
+                "pattern": "^env:[A-Z][A-Z0-9_]*$"
+              }
+            },
+            "required": [
+              "method",
+              "path"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "create",
+          "id_path",
+          "teardown"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "mutation_endpoints": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "method": {
+            "type": "string",
+            "enum": [
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          },
+          "path": {
+            "type": "string",
+            "pattern": "^\\/(?!\\/)"
+          }
+        },
+        "required": [
+          "method",
+          "path"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "triage": {
+      "type": "object",
+      "properties": {
+        "rules": {
+          "maxItems": 100,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "rule_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9._-]{1,60}$"
+              },
+              "class": {
+                "type": "string",
+                "enum": [
+                  "BUG_APP",
+                  "ENV_DB_TIMEOUT",
+                  "ENV_SERVICE",
+                  "AUTH_FIXTURE",
+                  "TEST_FLAKY",
+                  "SPEC_GAP",
+                  "DATA_DRIFT",
+                  "UNKNOWN"
+                ]
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "match": {
+                "type": "object",
+                "properties": {
+                  "phase": {
+                    "type": "string",
+                    "enum": [
+                      "setup",
+                      "steps",
+                      "oracles",
+                      "teardown"
+                    ]
+                  },
+                  "source": {
+                    "type": "string",
+                    "enum": [
+                      "oracle",
+                      "invariant",
+                      "setup",
+                      "timeout",
+                      "action",
+                      "scope",
+                      "flaky",
+                      "abort"
+                    ]
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 100
+                  },
+                  "http_status": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 100,
+                      "maximum": 599
+                    }
+                  },
+                  "contains": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "reason_code": {
+                    "type": "string",
+                    "maxLength": 60
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "rule_id",
+              "class",
+              "confidence",
+              "match"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "rules"
+      ],
+      "additionalProperties": false
+    },
+    "limits": {
+      "type": "object",
+      "properties": {
+        "case_timeout_ms": {
+          "default": 30000,
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 300000
+        },
+        "run_timeout_ms": {
+          "default": 1800000,
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 14400000
+        },
+        "teardown_timeout_ms": {
+          "default": 30000,
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 120000
+        },
+        "max_retries": {
+          "default": 0,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "max_workers": {
+          "default": 1,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8
+        },
+        "max_artifact_bytes_per_case": {
+          "default": 5242880,
+          "type": "integer",
+          "minimum": 1024,
+          "maximum": 20971520
+        },
+        "max_events_per_attempt": {
+          "default": 2000,
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 10000
+        }
+      },
+      "required": [
+        "case_timeout_ms",
+        "run_timeout_ms",
+        "teardown_timeout_ms",
+        "max_retries",
+        "max_workers",
+        "max_artifact_bytes_per_case",
+        "max_events_per_attempt"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "site_id",
+    "environment",
+    "base_url",
+    "allowed_origins",
+    "auth",
+    "browser",
+    "invariants",
+    "fixtures",
+    "mutation_endpoints",
+    "limits"
+  ],
+  "additionalProperties": false
+}

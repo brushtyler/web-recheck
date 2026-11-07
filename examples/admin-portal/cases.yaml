@@ -1,0 +1,60 @@
+schema_version: "1"
+site_id: admin-portal
+cases:
+  - mutating: false
+    parameters: {}
+    case_id: ADMIN-LOGIN-001
+    title: Login page is reachable
+    source:
+      inventory_id: AUTH-001
+    steps:
+      - type: navigate
+        path: /login
+    oracles:
+      - type: text_visible
+        text: Sign in
+      - type: http_status
+        status: 200
+    state: EXECUTABLE
+    case_revision: 1
+    content_hash: sha256:90b199febd496685e9d248e4de73734d2763eaf203cbbcb8586836ab1559a7dd
+    approval:
+      approved_by: seed-bootstrap
+      approved_at: 2026-11-06T00:00:00.000Z
+      approved_revision: 1
+      approved_content_hash: sha256:90b199febd496685e9d248e4de73734d2763eaf203cbbcb8586836ab1559a7dd
+  - mutating: false
+    parameters: {}
+    case_id: ADMIN-DASH-001
+    title: Dashboard lists rows
+    source:
+      inventory_id: DASH-001
+    steps:
+      - type: navigate
+        path: /dashboard
+    oracles:
+      - type: count_equals
+        target:
+          test_id: row
+        count: 2
+    state: EXECUTABLE
+    case_revision: 1
+    content_hash: sha256:aca258017db8cf815aab078d26fc755a5f86a6d12dd35098bffc7bc9eb94bb52
+    approval:
+      approved_by: seed-bootstrap
+      approved_at: 2026-11-06T00:00:00.000Z
+      approved_revision: 1
+      approved_content_hash: sha256:aca258017db8cf815aab078d26fc755a5f86a6d12dd35098bffc7bc9eb94bb52
+  - mutating: false
+    parameters: {}
+    case_id: ADMIN-DISC-001
+    title: Discovered, not yet approved
+    state: DISCOVERED
+    steps:
+      - type: navigate
+        path: /ok
+    oracles:
+      - type: text_visible
+        text: Welcome
+    case_revision: 1
+    content_hash: sha256:6595a9447921d488baccff6530e9e37a003cf437f7e9b860fef3cba3fee0346e

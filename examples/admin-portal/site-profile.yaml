@@ -1,0 +1,30 @@
+schema_version: "1"
+site_id: admin-portal
+environment: beta
+base_url: http://127.0.0.1:4310
+allowed_origins:
+  - http://127.0.0.1:4310
+auth:
+  strategy: none
+browser:
+  engine: http-lite
+invariants:
+  no_console_errors: true
+  no_same_origin_5xx: true
+fixtures:
+  item:
+    create:
+      method: POST
+      path: /api/items
+      body:
+        name: "${resource.name}"
+    id_path: id
+    teardown:
+      method: DELETE
+      path: /api/items/${resource.id}
+mutation_endpoints:
+  - method: DELETE
+    path: /api/items/{owned}
+limits:
+  case_timeout_ms: 15000
+  max_retries: 1

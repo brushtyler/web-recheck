@@ -1,0 +1,64 @@
+schema_version: "1"
+site_id: beta-portal
+cases:
+  - mutating: false
+    parameters: {}
+    case_id: BETA-HOME-001
+    title: Home shows welcome
+    steps:
+      - type: navigate
+        path: /ok
+    oracles:
+      - type: text_visible
+        text: Welcome
+    state: EXECUTABLE
+    case_revision: 1
+    content_hash: sha256:6595a9447921d488baccff6530e9e37a003cf437f7e9b860fef3cba3fee0346e
+    approval:
+      approved_by: seed-bootstrap
+      approved_at: 2026-11-06T00:00:00.000Z
+      approved_revision: 1
+      approved_content_hash: sha256:6595a9447921d488baccff6530e9e37a003cf437f7e9b860fef3cba3fee0346e
+  - mutating: false
+    parameters: {}
+    case_id: BETA-NAV-001
+    title: Navigate to dashboard via link
+    steps:
+      - type: navigate
+        path: /ok
+      - type: click
+        target:
+          role: link
+          name: Dashboard
+    oracles:
+      - type: url_matches
+        path: /dashboard
+    state: EXECUTABLE
+    case_revision: 1
+    content_hash: sha256:a4c0c07c7004ae7c10a32a440a0a90837d61ae7a909355db578221da8a19289f
+    approval:
+      approved_by: seed-bootstrap
+      approved_at: 2026-11-06T00:00:00.000Z
+      approved_revision: 1
+      approved_content_hash: sha256:a4c0c07c7004ae7c10a32a440a0a90837d61ae7a909355db578221da8a19289f
+  - mutating: true
+    parameters: {}
+    case_id: BETA-ITEM-001
+    title: Item fixture lifecycle
+    steps:
+      - type: fixture
+        kind: item
+        as: it
+      - type: navigate
+        path: /ok
+    oracles:
+      - type: text_visible
+        text: Welcome
+    state: EXECUTABLE
+    case_revision: 1
+    content_hash: sha256:5a5949d6244a290d5563f8408ee48baea1f532c4fcff8fa65a6b6812e1381c9f
+    approval:
+      approved_by: seed-bootstrap
+      approved_at: 2026-11-06T00:00:00.000Z
+      approved_revision: 1
+      approved_content_hash: sha256:5a5949d6244a290d5563f8408ee48baea1f532c4fcff8fa65a6b6812e1381c9f

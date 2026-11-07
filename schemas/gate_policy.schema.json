@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1"
+    },
+    "required_cases": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+      }
+    },
+    "flaky_as": {
+      "default": "INCONCLUSIVE",
+      "type": "string",
+      "enum": [
+        "FAIL",
+        "INCONCLUSIVE"
+      ]
+    },
+    "non_required_unexecuted": {
+      "default": "INCONCLUSIVE",
+      "type": "string",
+      "enum": [
+        "INCONCLUSIVE",
+        "IGNORE"
+      ]
+    },
+    "triage_effect": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "enum": [
+          "BUG_APP",
+          "ENV_DB_TIMEOUT",
+          "ENV_SERVICE",
+          "AUTH_FIXTURE",
+          "TEST_FLAKY",
+          "SPEC_GAP",
+          "DATA_DRIFT",
+          "UNKNOWN"
+        ]
+      },
+      "additionalProperties": {
+        "type": "string",
+        "enum": [
+          "FAIL",
+          "INCONCLUSIVE"
+        ]
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "required_cases",
+    "flaky_as",
+    "non_required_unexecuted",
+    "triage_effect"
+  ],
+  "additionalProperties": false
+}
