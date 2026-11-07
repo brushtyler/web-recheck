@@ -1,5 +1,5 @@
 schema_version: "1"
-site_id: gestionale
+site_id: admin-portal
 environment: beta
 base_url: http://127.0.0.1:4310
 allowed_origins:

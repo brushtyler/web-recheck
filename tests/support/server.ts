@@ -36,7 +36,7 @@ export async function startServer(port = 0): Promise<TestServer> {
         items.delete(found[0]);
         return send(204, '');
       }
-      if (p === '/ok' || p === '/login') return send(200, page('Home', '<h1>Welcome</h1><a href="/dashboard">Dashboard</a><p>Accedi</p>'));
+      if (p === '/ok' || p === '/login') return send(200, page('Home', '<h1>Welcome</h1><a href="/dashboard">Dashboard</a><p>Sign in</p>'));
       if (p === '/dashboard') return send(200, page('Dashboard', '<h1>Dashboard</h1><div data-testid="row">r1</div><div data-testid="row">r2</div>'));
       if (p === '/fail') return send(200, page('Fail', '<p>nothing here</p>'));
       if (p === '/gateway-timeout') return send(504, page('Timeout', '<p>Gateway Timeout</p>'));

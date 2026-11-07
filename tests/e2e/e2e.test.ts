@@ -33,7 +33,7 @@ const cli = async (args: string[]) => {
 const runArgs = (dir: string, out: string, extra: string[] = []) => ['run', '--profile', join(dir, 'site-profile.yaml'), '--registry', join(dir, 'cases.yaml'), '--policy', join(dir, 'gate-policy.yaml'), '--out', out, '--adapter', 'http-lite', ...extra];
 
 describe('AC-36 genericity: both example portals run with no source change', () => {
-  for (const [ex, id] of [['gestionale', 'GST-LOGIN-001'], ['beta-portal', 'BETA-HOME-001']] as const) {
+  for (const [ex, id] of [['admin-portal', 'ADMIN-LOGIN-001'], ['beta-portal', 'BETA-HOME-001']] as const) {
     it(ex, async () => {
       const dir = stage(ex);
       const out = mkdtempSync(join(tmpdir(), 'wr-out-'));

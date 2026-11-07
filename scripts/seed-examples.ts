@@ -14,12 +14,12 @@ function make(d: Draft): CaseT {
   return c;
 }
 
-writeRegistry('examples/gestionale/cases.yaml', {
-  schema_version: '1', site_id: 'gestionale',
+writeRegistry('examples/admin-portal/cases.yaml', {
+  schema_version: '1', site_id: 'admin-portal',
   cases: [
-    make({ case_id: 'GST-LOGIN-001', title: 'Login page is reachable', source: { inventory_id: 'AUTH-001' }, steps: [{ type: 'navigate', path: '/login' }], oracles: [{ type: 'text_visible', text: 'Accedi' }, { type: 'http_status', status: 200 }] }),
-    make({ case_id: 'GST-DASH-001', title: 'Dashboard lists rows', source: { inventory_id: 'DASH-001' }, steps: [{ type: 'navigate', path: '/dashboard' }], oracles: [{ type: 'count_equals', target: { test_id: 'row' }, count: 2 }] }),
-    make({ case_id: 'GST-DISC-001', title: 'Discovered, not yet approved', state: 'DISCOVERED', steps: [{ type: 'navigate', path: '/ok' }], oracles: [{ type: 'text_visible', text: 'Welcome' }] }),
+    make({ case_id: 'ADMIN-LOGIN-001', title: 'Login page is reachable', source: { inventory_id: 'AUTH-001' }, steps: [{ type: 'navigate', path: '/login' }], oracles: [{ type: 'text_visible', text: 'Sign in' }, { type: 'http_status', status: 200 }] }),
+    make({ case_id: 'ADMIN-DASH-001', title: 'Dashboard lists rows', source: { inventory_id: 'DASH-001' }, steps: [{ type: 'navigate', path: '/dashboard' }], oracles: [{ type: 'count_equals', target: { test_id: 'row' }, count: 2 }] }),
+    make({ case_id: 'ADMIN-DISC-001', title: 'Discovered, not yet approved', state: 'DISCOVERED', steps: [{ type: 'navigate', path: '/ok' }], oracles: [{ type: 'text_visible', text: 'Welcome' }] }),
   ],
 });
 writeRegistry('examples/beta-portal/cases.yaml', {
