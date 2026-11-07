@@ -45,14 +45,20 @@ export function createGuardedClient(allowedOrigins: readonly string[]): HttpClie
             signal: req.signal,
             timeout: req.timeoutMs ?? 15000,
             lookup: (host, opts, cb) => {
-              if (isIP(host)) return (cb as (e: null, a: string, f: number) => void)(null, host, isIP(host));
+              const report = (list: { address: string; family: number }[]) => {
+                if (opts.all) (cb as (e: null, a: typeof list) => void)(null, list);
+                else {
+                  const first = list[0] as { address: string; family: number };
+                  (cb as (e: null, a: string, f: number) => void)(null, first.address, first.family);
+                }
+              };
+              if (isIP(host)) return report([{ address: host, family: isIP(host) }]);
               dnsLookup(host, { ...opts, all: true }, (err, addrs) => {
                 if (err) return (cb as (e: Error) => void)(err);
                 const list = addrs as unknown as { address: string; family: number }[];
                 const bad = list.find((a) => isDeniedIp(a.address));
                 if (bad || list.length === 0) return (cb as (e: Error) => void)(new FrameworkError('SCOPE_DENIED', 'resolved address denied'));
-                const first = list[0] as { address: string; family: number };
-                (cb as (e: null, a: string, f: number) => void)(null, first.address, first.family);
+                report(list);
               });
             },
           },

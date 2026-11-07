@@ -12,11 +12,26 @@ import { renderHtml, escapeHtml } from '../../src/report/html.js';
 import { renderJunit } from '../../src/report/junit.js';
 import { computeMetrics } from '../../src/report/metrics.js';
 import { isAllowed } from '../../src/security/scope.js';
+import { createGuardedClient } from '../../src/security/http.js';
 import { parseSecretRef, resolveSecret } from '../../src/security/secrets.js';
 import { redactor } from '../../src/security/redactor.js';
 import { resolvePolicy, RunResultsSchema, type RunResults } from '../../src/contracts/index.js';
 import { digest } from '../../src/compare/hash.js';
 import type { FailureT } from '../../src/contracts/index.js';
+import { startServer } from '../support/server.js';
+
+describe('guarded HTTP client', () => {
+  it('handles Node DNS lookups that request all addresses', async () => {
+    const server = await startServer();
+    try {
+      const origin = server.origin.replace('127.0.0.1', 'localhost');
+      const response = await createGuardedClient([origin]).request({ url: `${origin}/ok`, method: 'GET' });
+      expect(response.status).toBe(200);
+    } finally {
+      await server.close();
+    }
+  });
+});
 
 const F = (o: Partial<FailureT>): FailureT => ({ source: 'oracle', name: 'text_visible', phase: 'oracles', message: 'm', ...o });
 
